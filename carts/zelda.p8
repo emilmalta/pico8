@@ -16,24 +16,35 @@ end
 function _draw()
  map()
  spr(pspr,px,py,2,2)
+ mytile=mget(px/8, py/8)
+ print(mytile,8,8,7)
 end
 
 function _update60()
+ newx=px
+ newy=py
  if btnp(⬅️) then
-  px=px-16
+  newx=px-16
   pspr=4
  end
  if btnp(➡️) then
-  px=px+16
+  newx=px+16
   pspr=8
  end
  if btnp(⬆️) then
-  py=py-16
+  newy=py-16
   pspr=12
  end
  if btnp(⬇️) then
-  py=py+16
+  newy=py+16
   pspr=0
+ end
+ 
+ mytile=mget(newx/8, newy/8)
+ 
+ if mytile!=41 then
+  px=newx
+  py=newy
  end
 end
 
