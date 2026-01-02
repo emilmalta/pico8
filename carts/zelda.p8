@@ -7,16 +7,34 @@ function _init()
  poke(0x5f2e,1)
  pal(11, 11+128,1)
  pal(2, 3+128,1)
+ 
+ px=64
+ py=64
 end
 
 function _draw()
  map()
- spr(0,64,64,2,2)
+ spr(0,px,py,2,2)
 end
 
 function _update60()
-
+ if btnp(⬅️) then
+  px=px-16
+ end
+ if btnp(➡️) then
+  px=px+16
+ end
+ if btnp(⬆️) then
+  py=py-16
+ end
+ if btnp(⬇️) then
+  py=py+16
+ end
 end
+
+
+
+
 __gfx__
 eeeee00000eeeeeeeeeee00000eeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeeeee000eeeeeeeeeeeeee000eeeeee
 eeee0bffbb0eeeeeeeee0bbffb0eeeeeeeee00bbbbb0eeeeeeeeee00000eeeeeeeee0bbbbb00eeeeeeeee00000eeeeeeeeeee00000eeeeeeeeeeee00000eeeee
