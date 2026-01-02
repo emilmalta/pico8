@@ -1,5 +1,22 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
+__lua__
+function _init()
+ palt(0,false)
+ palt(14,true)
+ poke(0x5f2e,1)
+ pal(11, 11+128,1)
+ pal(2, 3+128,1)
+end
+
+function _draw()
+ map()
+ spr(0,64,64,2,2)
+end
+
+function _update60()
+
+end
 __gfx__
 eeeee00000eeeeeeeeeee00000eeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeeeee000eeeeeeeeeeeeee000eeeeee
 eeee0bffbb0eeeeeeeee0bbffb0eeeeeeeee00bbbbb0eeeeeeeeee00000eeeeeeeee0bbbbb00eeeeeeeee00000eeeeeeeeeee00000eeeeeeeeeeee00000eeeee
