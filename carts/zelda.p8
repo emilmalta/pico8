@@ -10,25 +10,30 @@ function _init()
  
  px=64
  py=64
+ pspr=0
 end
 
 function _draw()
  map()
- spr(0,px,py,2,2)
+ spr(pspr,px,py,2,2)
 end
 
 function _update60()
  if btnp(⬅️) then
   px=px-16
+  pspr=4
  end
  if btnp(➡️) then
   px=px+16
+  pspr=8
  end
  if btnp(⬆️) then
   py=py-16
+  pspr=12
  end
  if btnp(⬇️) then
   py=py+16
+  pspr=0
  end
 end
 
