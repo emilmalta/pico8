@@ -11,37 +11,72 @@ function _init()
  px=64
  py=64
  pspr=0
+ 
+ mode="idle"
 end
 
 function _draw()
  map()
  spr(pspr,px,py,2,2)
+ print(mode, 8, 8, 7)
 end
 
 function _update60()
- newx=px
- newy=py
+ if mode=="idle" then
+  checkbutts()
+ elseif mode=="move" then
+  moveplayer()
+ end
+end
+
+function moveplayer()
+ px+=psx
+ py+=psy
+ dist-=1
+ if dist <=0 then
+  mode="idle"
+ end
+end
+
+function checkbutts()
+ local press=false
+ local newx=px
+ local newy=py
+ psx=0
+ psy=0
+ 
  if btnp(⬅️) then
   newx=px-16
+  psx=-1
   pspr=4
+  press=true
  end
  if btnp(➡️) then
   newx=px+16
+  psx=1
   pspr=8
+  press=true
  end
  if btnp(⬆️) then
   newy=py-16
+  psy=-1
   pspr=12
+  press=true
  end
  if btnp(⬇️) then
   newy=py+16
+  psy=1
   pspr=0
+  press=true
  end
  
- if walkable(newx,newy) then
-  px=newx
-  py=newy
+ if press then
+  if walkable(newx,newy) then
+   mode="move"
+   dist=16
+  end
  end
+
 end
 
 
