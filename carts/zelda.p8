@@ -13,12 +13,23 @@ function _init()
  pspr=0
  
  mode="idle"
+
+ walkanil={4,6} --left
+ walkanir={8,10} --right
+ walkaniu={12,14} --up
+ walkanid={0,2} --down
+ 
+ panit=0
+ paniframe=1
+ pani=walkanid
 end
 
 function _draw()
  map()
- spr(pspr,px,py,2,2)
+ spr(pani[paniframe],px,py,2,2)
  print(mode, 8, 8, 7)
+ print(panit, 8, 16, 7)
+ print(paniframe, 8, 24, 7)
 end
 
 function _update60()
@@ -32,6 +43,16 @@ end
 function moveplayer()
  px+=psx
  py+=psy
+ 
+ panit+=1
+ if panit>=8 then
+  panit=0
+  paniframe+=1
+  if paniframe>2 then
+   paniframe=1
+  end
+ end
+ 
  dist-=1
  if dist <=0 then
   mode="idle"
@@ -45,28 +66,25 @@ function checkbutts()
  psx=0
  psy=0
  
- if btnp(⬅️) then
+ if btn(⬅️) then
   newx=px-16
   psx=-1
-  pspr=4
+  pani=walkanil
   press=true
- end
- if btnp(➡️) then
+ elseif btn(➡️) then
   newx=px+16
   psx=1
-  pspr=8
+  pani=walkanir
   press=true
- end
- if btnp(⬆️) then
+ elseif btn(⬆️) then
   newy=py-16
   psy=-1
-  pspr=12
+  pani=walkaniu
   press=true
- end
- if btnp(⬇️) then
+ elseif btn(⬇️) then
   newy=py+16
   psy=1
-  pspr=0
+  pani=walkanid 
   press=true
  end
  
@@ -74,6 +92,7 @@ function checkbutts()
   if walkable(newx,newy) then
    mode="move"
    dist=16
+   moveplayer()
   end
  end
 
