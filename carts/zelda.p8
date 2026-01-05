@@ -67,31 +67,32 @@ function checkbutts()
  psy=0
  
  if btn(⬅️) then
-  newx=px-16
+  newx=px-8
   psx=-1
   pani=walkanil
   press=true
  elseif btn(➡️) then
-  newx=px+16
+  newx=px+8
   psx=1
   pani=walkanir
   press=true
  elseif btn(⬆️) then
-  newy=py-16
+  newy=py-8
   psy=-1
   pani=walkaniu
   press=true
  elseif btn(⬇️) then
-  newy=py+16
+  newy=py+8
   psy=1
   pani=walkanid 
   press=true
  end
  
  if press then
-  if walkable(newx,newy) then
+  if walkable(newx,newy+8) and
+     walkable(newx+8, newy+8) then
    mode="move"
-   dist=16
+   dist=8
    moveplayer()
   end
  end
