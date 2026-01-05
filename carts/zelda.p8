@@ -87,7 +87,7 @@ function checkbutts()
   pani=walkanid 
   press=true
  end
- 
+  
  if press then
   if walkable(newx,newy+8) and
      walkable(newx+8, newy+8) then
@@ -95,6 +95,10 @@ function checkbutts()
    dist=8
    moveplayer()
   end
+  else
+   panit=7
+   paniframe=1
+  
  end
 
 end
@@ -102,11 +106,7 @@ end
 
 function walkable(pnx, pny)
  mytile=mget(pnx/8, pny/8)
- if not fget(mytile, 0) then
-  return true
- end
- return false
-
+ return not fget(mytile, 0) 
 end
 __gfx__
 eeeee00000eeeeeeeeeee00000eeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeee00000eeeeeeeeeeeeeeeeeeeeeeeeeeee000eeeeeeeeeeeeee000eeeeee
