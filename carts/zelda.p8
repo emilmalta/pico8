@@ -22,28 +22,29 @@ function _init()
  panit=0
  paniframe=1
  pani=walkanid
+ 
+ lastbtn=0
 end
 
 function _draw()
  map()
  spr(pani[paniframe],px,py,2,2)
- print(mode, 8, 8, 7)
- print(panit, 8, 16, 7)
- print(paniframe, 8, 24, 7)
+ 
+ for p in all(points) do
+  pset(p[1], p[2],p[3])
+ end
 end
 
 function _update60()
- if mode=="idle" then
-  checkbutts()
- elseif mode=="move" then
-  moveplayer()
- end
+ checkbutts()
 end
 
 function moveplayer()
  px+=psx
  py+=psy
- 
+end
+
+function aniplayer()
  panit+=1
  if panit>=8 then
   panit=0
@@ -52,57 +53,97 @@ function moveplayer()
    paniframe=1
   end
  end
- 
- dist-=1
- if dist <=0 then
-  mode="idle"
- end
 end
 
 function checkbutts()
- local press=false
- local newx=px
- local newy=py
+ local press=0
  psx=0
  psy=0
  
  if btn(⬅️) then
-  newx=px-8
   psx=-1
   pani=walkanil
-  press=true
- elseif btn(➡️) then
-  newx=px+8
+  press+=1 
+ end
+ if btn(➡️) then
   psx=1
   pani=walkanir
-  press=true
- elseif btn(⬆️) then
-  newy=py-8
+  press+=1 
+ end
+ if btn(⬆️) then
   psy=-1
   pani=walkaniu
-  press=true
- elseif btn(⬇️) then
-  newy=py+8
+  press+=1 
+ end
+ if btn(⬇️) then
   psy=1
   pani=walkanid 
-  press=true
+  press+=1 
  end
+ 
+ if press>0 then
   
- if press then
-  if walkable(newx,newy+8) and
-     walkable(newx+8, newy+8) then
-   mode="move"
-   dist=8
+  --normalize
+  if press>=2 then
+   psx=psx*0.7
+   psy=psy*0.7
+  end
+  
+  --anti cobblestone
+  if lastbtn!=btn() then
+   px=flr(px)
+   py=flr(py)
+  end
+  
+  local nocol=checkmove(psx,psy)
+  
+  --diagonal slide
+  if nocol==false and press>=2 then
+   if checkmove(psx,0) then
+    psy=0
+    psx=psx/0.7
+    nocol=true
+   elseif checkmove(0,psy) then
+    psx=0
+    psy=psy/0.7
+    nocol=true
+   end
+  end
+  
+  if nocol then
    moveplayer()
   end
-  else
-   panit=7
-   paniframe=1
   
- end
+  aniplayer()
+  
+ else
+  panit=7
+  paniframe=1
 
+ end
+ 
+ lastbtn=btn()
 end
 
+function checkmove(dx,dy)
+ local newx=px+dx
+ local newy=py+dy
+ 
+ points={
+  {newx+4,newy+6,7},
+  {newx+11,newy+6,7},
+  {newx+4,newy+15,7},
+  {newx+11,newy+15,7}
+ }
+ 
+ for p in all(points) do
+  if not walkable(p[1], p[2]) then 
+   p[3]=8
+   return false
+  end
+ end
+ return true
+end
 
 function walkable(pnx, pny)
  mytile=mget(pnx/8, pny/8)
