@@ -7,7 +7,7 @@ function _init()
  poke(0x5f2e,1)
  pal(11, 11+128,1)
  pal(2, 3+128,1)
- 
+  
  px=64
  py=64
  pspr=0
@@ -19,14 +19,23 @@ function _init()
  walkaniu={12,14} --up
  walkanid={0,2} --down
  
+ coll={4,9,4,12}
+ colr={11,9,11,12}
+ colu={6,7,9,7}
+ cold={6,15,9,15} 
+ col=cold
+ 
  panit=0
  paniframe=1
  pani=walkanid
  
  lastbtn=0
+ 
+ tframe=0
 end
 
 function _draw()
+ tframe+=1
  map()
  spr(pani[paniframe],px,py,2,2)
  
@@ -37,6 +46,19 @@ end
 
 function _update60()
  checkbutts()
+ 
+ if tframe%20==0 then
+  for x=0,15 do
+   for y=0,15 do
+    local tle=mget(x,y)
+    if tle>=37 and tle<=39 then
+     mset(x,y,tle+1)
+    elseif tle==40 then
+     mset(x,y,37)
+    end
+   end
+  end
+ end
 end
 
 function moveplayer()
@@ -63,22 +85,26 @@ function checkbutts()
  if btn(⬅️) then
   psx=-1
   pani=walkanil
-  press+=1 
+  press+=1
+  col=coll 
  end
  if btn(➡️) then
   psx=1
   pani=walkanir
-  press+=1 
+  press+=1
+  col=colr 
  end
  if btn(⬆️) then
   psy=-1
   pani=walkaniu
-  press+=1 
+  press+=1
+  col=colu 
  end
  if btn(⬇️) then
   psy=1
   pani=walkanid 
-  press+=1 
+  press+=1
+  col=cold 
  end
  
  if press>0 then
@@ -97,16 +123,39 @@ function checkbutts()
   
   local nocol=checkmove(psx,psy)
   
-  --diagonal slide
-  if nocol==false and press>=2 then
-   if checkmove(psx,0) then
-    psy=0
-    psx=psx/0.7
-    nocol=true
-   elseif checkmove(0,psy) then
-    psx=0
-    psy=psy/0.7
-    nocol=true
+  if nocol==false then
+  
+   if press==1 then
+    --corner slip
+    local slpx=psx==0 and 1 or 0
+    local slpy=psy==0 and 1 or 0
+    
+    local j=1
+    repeat
+	    for i=1,6 do
+	     local slpdx=psx+slpx*i*j
+	     local slpdy=psy+slpy*i*j
+	     if checkmove(slpdx,slpdy) then
+	      psx=sgn(slpdx)
+	      psy=sgn(slpdy)
+	      nocol=true 
+	      break
+	     end
+	    end
+	    j-=2
+    until nocol or j <-1
+   
+   elseif press>=2 then
+    --diagonal slide
+	   if checkmove(psx,0) then
+	    psy=0
+	    psx=psx/0.7
+	    nocol=true
+	   elseif checkmove(0,psy) then
+	    psx=0
+	    psy=psy/0.7
+	    nocol=true
+	   end
    end
   end
   
@@ -130,10 +179,8 @@ function checkmove(dx,dy)
  local newy=py+dy
  
  points={
-  {newx+4,newy+6,7},
-  {newx+11,newy+6,7},
-  {newx+4,newy+15,7},
-  {newx+11,newy+15,7}
+  {newx+col[1],newy+col[2],7},
+  {newx+col[3],newy+col[4],7}
  }
  
  for p in all(points) do
